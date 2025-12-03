@@ -2,8 +2,18 @@ import os
 import sys
 import pytest
 
-# Ensure we can import main.py from the homework folder
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# Ensure we can import main.py from the homework folder.
+# Put the homework folder first on sys.path so it takes precedence
+# and remove any previously-imported top-level `main` to avoid
+# importing a different project's `main.py` from a cached module.
+project_root = os.path.dirname(os.path.dirname(__file__))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# If a different `main` module was already imported (from another
+# project), remove it so Python will import the correct one below.
+if "main" in sys.modules:
+    del sys.modules["main"]
 
 from main import build_roster
 
